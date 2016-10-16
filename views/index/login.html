@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link href="http://cdn.bootcss.com/twitter-bootstrap/3.0.3/css/bootstrap-theme.min.css" rel="stylesheet">
+    <link href="http://cdn.bootcss.com/twitter-bootstrap/3.0.3/css/bootstrap.min.css" rel="stylesheet">
+    <!-- jQuery scrollUp 2.0-->
+    <link id="scrollUpTheme" rel="stylesheet" href="http://markgoodyear.com/labs/scrollup/css/themes/image.css">
+    <script src="http://cdn.bootcss.com/jquery/2.0.3/jquery.min.js"></script>
+    <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
+    <!--[if lt IE 9]>
+    <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <script src="http://cdn.bootcss.com/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+    <!--<link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet">-->
+</head>
+<body>
+<div class="container">
+    <div class="loginBox row">
+        <h2 class="text-center">后台登录</h2>
+        <form id="wyccn" name="wyccn" action="" method="post" class="form-horizontal">
+            <div class="form-group has-success">
+                <label for="nick_name" class="col-sm-2 col-md-2 control-label">用户名</label>
+                <div class="col-sm-10 col-md-10">
+                    <input type="text" class="form-control" name="user[name]" placeholder="用户名" value="">
+                </div>
+            </div>
+            <div class="form-group has-success">
+                <label for="user_password" class="col-sm-2 col-md-2 control-label">密码</label>
+                <div class="col-sm-10 col-md-10">
+                    <input type="password" class="form-control" name="user[password]" placeholder="密码">
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-offset-4 col-sm-10" style="color: #990033;"></div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-offset-4 col-sm-10 col-md-10">
+                    <input type="hidden" name="url" value="/admin"/>
+                    <button class="btn btn-info" data-loading-text="正在登录..." type="submit" id="EV-submit">登 录</button>
+                    &nbsp;&nbsp;&nbsp;&nbsp;
+                    <button class="btn btn-info" type="reset">清 空</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+</body>
+<script src="http://cdn.bootcss.com/twitter-bootstrap/3.0.3/js/bootstrap.min.js"></script>
+<script src="/public/js/index/login.js"></script>
+<style>* {
+    margin: 0;
+    padding: 0;
+}
+body {
+    background: #444 url(http://sandbox.runjs.cn/uploads/rs/418/nkls38xx/carbon_fibre_big.png);
+    font-family: "宋体";
+}
+.loginBox {
+    width: 420px;
+    height: 280px;
+    padding: 0 20px;
+    border: 1px solid #fff;
+    color: #000;
+    margin-top: 40px;
+    border-radius: 8px;
+    background: white;
+    box-shadow: 0 0 15px #222;
+    background: -moz-linear-gradient(top, #fff, #efefef 8%);
+    background: -webkit-gradient(linear, 0 0, 0 100%, from(#f6f6f6), to(#f4f4f4));
+    font: 11px/1.5em 'Microsoft YaHei';
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    margin-left: -210px;
+    margin-top: -165px;
+}
+
+.loginBox h2 {
+    height: 45px;
+    font-size: 20px;
+    font-weight: normal;
+}
+
+.loginBox .left {
+    border-right: 1px solid #ccc;
+    height: 100%;
+    padding-right: 20px;
+}
+
+.regBtn {
+    margin-top: 21px;
+}</style>
+</html>
