@@ -35,7 +35,6 @@ db.open(function (err, db) {
                             }
                         });
                     }else{
-                        console.log(333);
                         res.redirect('/index/login');
                     }
                 });
