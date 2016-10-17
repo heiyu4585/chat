@@ -19,28 +19,29 @@ db.open(function (err, db) {
             } else {
                 //登陆页面
                 router.get('/login', function (req, res, next) {
+                        res.render('./index/login', {
+                            title: '登录页'
+                        });
+                });
 
+                // 登陆操作
+                router.get('/loginFn', function (req, res, next) {
+                    console.log(222);
                     //用户名和密码 时,查询数据库
                     if (req.query.name && req.query.password) {
                         collection.find({name: req.query.name}).toArray(function (err, docs) {
                             if (docs[0] && docs[0].password && (docs[0].password == req.query.password)) {
-                                console.log(5);
-                                res.redirect('/index');
-                                //res.redirect(404,'/');
-                                //res.location('/');
+                                res.redirect('/index?name='+req.query.name);
                             }
                         });
-
-                    } else {
-                        res.render('./index/login', {
-                            title: '登录页'
-                        });
+                    }else{
+                        console.log(333);
+                        res.redirect('/index/login');
                     }
-
                 });
 
                 //    // 用户列表
-                    router.get('/', function (req, res, next) {
+                router.get('/', function (req, res, next) {
                     collection.find().toArray(function (err, docs) {
                         //res.send('首页');
                         res.render('index', {
@@ -56,7 +57,6 @@ db.open(function (err, db) {
         console.log(err);
     }
 });
-
 
 
 //var User = require('../models/user');

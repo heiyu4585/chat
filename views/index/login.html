@@ -19,7 +19,7 @@
 <div class="container">
     <div class="loginBox row">
         <h2 class="text-center">后台登录</h2>
-        <form id="wyccn" name="wyccn" action="/index" method="get" class="form-horizontal">
+        <form id="wyccn" name="wyccn" action="/index/loginFn" method="get" class="form-horizontal">
             <div class="form-group has-success">
                 <label for="nick_name" class="col-sm-2 col-md-2 control-label">用户名</label>
                 <div class="col-sm-10 col-md-10">
@@ -38,7 +38,7 @@
             <div class="form-group">
                 <div class="col-sm-offset-4 col-sm-10 col-md-10">
                     <input type="hidden" name="url" value="/admin"/>
-                    <button class="btn btn-info" data-loading-text="正在登录..." type="submit" >登 录</button>
+                    <button class="btn btn-info" data-loading-text="正在登录..." type="submit" id="EV-submit">登 录</button>
                     &nbsp;&nbsp;&nbsp;&nbsp;
                     <button class="btn btn-info" type="reset">清 空</button>
                 </div>
