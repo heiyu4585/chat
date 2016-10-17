@@ -131,8 +131,10 @@ swig.setDefaults({cache:false});
 //http://blog.csdn.net/dszgf5717/article/details/50697686
 //
 
-//
-//
-//function log(obj){
-//    console.log(obj);
-//}
+/**
+ * 当前问题:
+ * 1.login 页面  账号密码不正确时,一直在读取
+ * 2.如何,让表单提交之前验证账号和密码
+ * 3.是否可以ajax 提交
+ * 4.ajax提交是走nodejs 还是 public内的js
+ * */
