@@ -19,23 +19,50 @@ db.open(function (err, db) {
             } else {
                 //登陆页面
                 router.get('/login', function (req, res, next) {
+                    //用户名和密码 时,查询数据库
+                    if(req.query.name && req.query.name && req.query.password) {
+                            collection.find({name: req.query.name}).toArray(function (err, docs) {
+                                if (docs[0] && docs[0].password && (docs[0].password == req.query.password)) {
+                                    res.redirect('/index?name='+req.query.name);
+                                }else {
+                                    res.render('./index/login', {
+                                        title: '登录页',
+                                        err:'密码错误',
+                                        userName:req.query.name
+                                    });
+                                }
+                            });
+                    }else{
                         res.render('./index/login', {
                             title: '登录页'
                         });
+                    }
                 });
 
-                // 登陆操作
-                router.get('/loginFn', function (req, res, next) {
-                    console.log(222);
+                //注册
+                router.get('/register', function (req, res, next) {
                     //用户名和密码 时,查询数据库
-                    if (req.query.name && req.query.password) {
+                    if(req.query.name && req.query.name && req.query.password) {
                         collection.find({name: req.query.name}).toArray(function (err, docs) {
-                            if (docs[0] && docs[0].password && (docs[0].password == req.query.password)) {
+                            //如果没有返回值
+                            if (!docs[0]) {
+                                // 写入数据
+                                var tmp1 = {name: req.query.name, password:req.query.password};
+                                collection.insert([tmp1], {safe: true}, function (err, result) {
+                                    //console.log(result);
+                                });
                                 res.redirect('/index?name='+req.query.name);
+                            }else {
+                                res.render('./index/register', {
+                                    title: '注册页',
+                                    err:'有相同的用户名'
+                                });
                             }
                         });
                     }else{
-                        res.redirect('/index/login');
+                        res.render('./index/register', {
+                            title: '注册页'
+                        });
                     }
                 });
 

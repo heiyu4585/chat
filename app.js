@@ -137,4 +137,6 @@ swig.setDefaults({cache:false});
  * 2.如何,让表单提交之前验证账号和密码
  * 3.是否可以ajax 提交
  * 4.ajax提交是走nodejs 还是 public内的js
+ * 5.不通过js如何保存错误后的用户名   // 模板变量
+ * 6.后台如何给前端弹窗提示,提示注册成功
  * */

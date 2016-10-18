@@ -18,12 +18,12 @@
 <body>
 <div class="container">
     <div class="loginBox row">
-        <h2 class="text-center">登录</h2>
-        <form id="wyccn" name="wyccn" action="/index/login" method="get" class="form-horizontal">
+        <h2 class="text-center">注册</h2>
+        <form id="wyccn" name="wyccn" action="/index/register" method="get" class="form-horizontal">
             <div class="form-group has-success">
                 <label for="nick_name" class="col-sm-2 col-md-2 control-label">用户名</label>
                 <div class="col-sm-10 col-md-10">
-                    <input type="text" class="form-control" name="name" placeholder="用户名" value="{{userName}}">
+                    <input type="text" class="form-control" name="name" placeholder="用户名" value="">
                 </div>
             </div>
             <div class="form-group has-success">
@@ -39,7 +39,7 @@
             <div class="form-group">
                 <div class="col-sm-offset-4 col-sm-10 col-md-10">
                     <input type="hidden" name="url" value="/admin"/>
-                    <button class="btn btn-info" data-loading-text="正在登录..." type="submit" id="EV-submit">登 录</button>
+                    <button class="btn btn-info" data-loading-text="正在登录..." type="submit" id="EV-submit">注册</button>
                     &nbsp;&nbsp;&nbsp;&nbsp;
                     <button class="btn btn-info" type="reset">清 空</button>
                     <span>警告:{{err}}</span>
