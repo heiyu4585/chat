@@ -61,7 +61,7 @@
             <h3 class="panel-title">聊天室</h3>
         </div>
         <div class="panel-body">
-            <div class="list-group col-xs-2 col-sm-2 col-md-2">
+            <div class="list-group col-xs-2 col-sm-2 col-md-2" id="userList">
                 <!--<a href="#" class="list-group-item active">-->
                     <!--Cras justo odio-->
                 <!--</a>-->
@@ -71,9 +71,9 @@
                 <!--<a href="#" class="list-group-item">Vestibulum at eros</a>-->
                 <!--{% block title %} {{title}} {%endblock%}-->
 
-                {% for author in authors %}
-                <a class=" list-group-item {% if loop.first %} active{% endif %}"  >{{ author.name }}</a>
-                {% endfor %}
+                <!--{% for author in authors %}-->
+                <!--<a class=" list-group-item {% if loop.first %} active{% endif %}"  >{{ author.name }}</a>-->
+                <!--{% endfor %}-->
             </div>
             <div class="col-xs-10 col-sm-10 col-md-10 sayContent">
                 <h4 class="text-right">当前登陆:{{author}}
@@ -104,6 +104,7 @@
 
 
 <script type="text/babel" charset="UTF-8" src="/public/js/miao1.js"></script>
+<script type="text/babel" charset="UTF-8" src="/public/js/index/index.js"></script>
 
 <script src="http://cdn.bootcss.com/jquery/1.11.1/jquery.min.js"></script>
 <script src="/public/js/common/bootstrap/bootstrap.min.js"></script>
