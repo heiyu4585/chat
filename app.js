@@ -140,4 +140,5 @@ swig.setDefaults({cache:false});
  * 5.不通过js如何保存错误后的用户名   // 模板变量
  * 6.后台如何给前端弹窗提示,提示注册成功
  * 7.react.render 没有父元素怎么办
+ * 8.post 如何传参
  * */
