@@ -9,6 +9,7 @@
     <script src="/public/js/common/react/pubsub.js"></script>
     <link rel="stylesheet" type="text/css" href="/public/css/bootstrap/bootstrap.css">
     <link rel="stylesheet" type="text/css" href="/public/css/index.css">
+    <script src="http://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js" ></script>
 </head>
 <body>
 
@@ -102,7 +103,44 @@
     </div>
 </div> <!-- /container -->
 
+<!--/***-->
+<!--* WebSocket-->
+<!--* *********************-->
+<!--* */-->
+<script src="/public/js/socket.io/socket.io.js"></script>
+<script>
+    $(function(){
+        var iosocket = io.connect();
 
+        iosocket.on('connect', function () {
+            $('#incomingChatMessages').append($('<li>已连接！</li>'));
+
+            iosocket.on('news', function(message) {
+                $('#incomingChatMessages').append($('<li></li>').text(message.hello));
+            });
+            iosocket.on('disconnect', function() {
+                $('#incomingChatMessages').append('<li>失去连接</li>');
+            });
+        });
+
+        $('#outgoingChatMessage').keypress(function(event) {
+            if(event.which == 13) {
+                event.preventDefault();
+                iosocket.send($('#outgoingChatMessage').val());
+                $('#incomingChatMessages').append($('<li></li>').text($('#outgoingChatMessage').val()));
+                $('#outgoingChatMessage').val('');
+            }
+        });
+    });
+</script>
+<input type="text" id="outgoingChatMessage">
+控制台:&nbsp;<ul id="incomingChatMessages"></ul>
+<br />
+<br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br />v
+<!--/***-->
+<!--* WebSocket-->
+<!--* *********************-->
+<!--* */-->
 <script type="text/babel" charset="UTF-8" src="/public/js/miao1.js"></script>
 <script type="text/babel" charset="UTF-8" src="/public/js/index/index.js"></script>
 
@@ -110,5 +148,7 @@
 <script src="/public/js/common/bootstrap/bootstrap.min.js"></script>
 <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
 <script src="/public/js/common/bootstrap/ie10-viewport-bug-workaround.js"></script>
+
+
 </body>
 </html>

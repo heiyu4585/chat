@@ -33,7 +33,6 @@ mongodb.connect('mongodb://localhost:27017/mydb',function(err){
         console.log('数据库连接失败!');
     }else{
         console.log('数据库连接成功');
-        app.listen(8081);
     }
 });
 //连接db
@@ -141,4 +140,29 @@ swig.setDefaults({cache:false});
  * 6.后台如何给前端弹窗提示,提示注册成功
  * 7.react.render 没有父元素怎么办
  * 8.post 如何传参
+ * */
+
+
+/***
+ * WebSocket
+ * *********************
+ * */
+var http=require("http");
+var sio=require("socket.io");
+
+var server=http.createServer(app);
+var fs=require("fs");
+
+server.listen(8081);
+var socket=sio.listen(server);
+socket.on("connection", function (socket) {
+    socket.emit("news",{hello:"你好"});
+    socket.on("otherEvent", function (data) {
+        console.log("服务器端接受到数据:%j",data);
+    })
+});
+
+/***
+ * WebSocket
+ * *********************
  * */

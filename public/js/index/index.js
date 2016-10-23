@@ -35,11 +35,11 @@ var ChatForm = React.createClass({
         return (
             <div className="input-group">
                 <form onSubmit={this.handleSubmit}>
-                    <input type="text" className="form-control" ref="chat"/>
+                    <input type="text" className="form-control" ref="chat" id="userInput"/>
                     <input type="hidden" ref="id"  value= {this.props.userId} />
                     <input type="hidden" ref="name"  value= {this.props.userName} />
                     <span className="input-group-btn">
-                        <button className="btn btn-default" type="submit">Go!</button>
+                        <button className="btn btn-default" type="submit" id="userSubmit">Go!</button>
                     </span>
                 </form>
             </div>
@@ -95,5 +95,5 @@ var ChatBox = React.createClass({
 });
 
 ReactDOM.render(
-    <ChatBox url="/index/chatList" pollInterval={2000}  userId="2" userName="heiyu"/>, document.getElementById("EV-chatList")
+    <ChatBox url="/index/chatList" pollInterval={2000}  userId="2"  userName="heiyu"/>, document.getElementById("EV-chatList")
 );
