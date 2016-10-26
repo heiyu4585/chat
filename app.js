@@ -131,6 +131,8 @@ swig.setDefaults({cache:false});
 //
 
 /**
+ * mongodb执行方法
+ * 
  * 当前问题:
  * 1.login 页面  账号密码不正确时,一直在读取
  * 2.如何,让表单提交之前验证账号和密码
