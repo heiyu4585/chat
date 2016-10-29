@@ -131,21 +131,6 @@ swig.setDefaults({cache: false});
 //
 
 /**
- * mongodb执行方法
- *
- * 当前问题:
- * 1.login 页面  账号密码不正确时,一直在读取
- * 2.如何,让表单提交之前验证账号和密码
- * 3.是否可以ajax 提交
- * 4.ajax提交是走nodejs 还是 public内的js
- * 5.不通过js如何保存错误后的用户名   // 模板变量
- * 6.后台如何给前端弹窗提示,提示注册成功
- * 7.react.render 没有父元素怎么办
- * 8.post 如何传参  登陆时,不通过url传参  //session
- * */
-
-
-/**
  * session
  * */
 var cookieParser = require('cookie-parser');
@@ -183,19 +168,20 @@ io.on('connection', function (socket) {
 
     //监听新用户加入
     socket.on('login', function (obj) {
+        console.log(obj.userName + '加入了聊天室');
+        console.log(obj);
         //将新加入用户的唯一标识当作socket的名称，后面退出的时候会用到
         socket.name = obj.userid;
 
         //检查在线列表，如果不在里面就加入
         if (!onlineUsers.hasOwnProperty(obj.userid)) {
-            onlineUsers[obj.userid] = obj.username;
+            onlineUsers[obj.userid] = obj.userName;
             //在线人数+1
             onlineCount++;
         }
 
         //向所有客户端广播用户加入
-        io.emit('login', {onlineUsers: onlineUsers, onlineCount: onlineCount, user: obj});
-        console.log(obj.username + '加入了聊天室');
+        io.emit('login', {onlineUsers: onlineUsers, onlineCount: onlineCount, userName: obj.userName,userId:obj.userId});
     });
     //监听用户退出
     socket.on('disconnect', function () {
@@ -210,21 +196,35 @@ io.on('connection', function (socket) {
             onlineCount--;
 
             //向所有客户端广播用户退出
-            io.emit('logout', {onlineUsers: onlineUsers, onlineCount: onlineCount, user: obj});
-            console.log(obj.username + '退出了聊天室');
+            io.emit('logout', {onlineUsers: onlineUsers, onlineCount: onlineCount, userName: obj.userName,userId:obj.userId});
+            console.log(obj.userName + '退出了聊天室');
         }
-        //监听用户发布聊天内容
-        socket.on('message', function (obj) {
-            //向所有客户端广播发布的消息
-            io.emit('message', obj);
-            console.log(obj.username + '说：' + obj.content);
-        });
-
     });
-
+    //监听用户发布聊天内容
+    socket.on('message', function (obj) {
+        //console.log(obj);
+        //向所有客户端广播发布的消息
+        io.emit('message', obj);
+        console.log(obj.userName + '说：' + obj.content);
+    });
 
 });
 /***
  * WebSocket
  * *********************
+ * */
+
+/**
+ * mongodb执行方法
+ *
+ * 当前问题:
+ * 1.login 页面  账号密码不正确时,一直在读取
+ * 2.如何,让表单提交之前验证账号和密码
+ * 3.是否可以ajax 提交
+ * 4.ajax提交是走nodejs 还是 public内的js
+ * 5.不通过js如何保存错误后的用户名   // 模板变量
+ * 6.后台如何给前端弹窗提示,提示注册成功
+ * 7.react.render 没有父元素怎么办
+ * 8.post 如何传参  登陆时,不通过url传参  //session
+ *9. socket 数据保存到 mongodb
  * */

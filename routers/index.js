@@ -86,7 +86,7 @@ db.open(function (err, db) {
                                 title: '首页-聊天室',
                                 //authors: docs,
                                 author: session.user.name,
-                                id: session.user.id
+                                id: session.user.id.toString()
                             });
                         //});
                     }
@@ -94,7 +94,7 @@ db.open(function (err, db) {
             }
         });
 
-        //liuyanbiao
+        //留言表
         db.createCollection('chat', {safe: true}, function (err, collection) {
             if (err) {
                 console.log(err);
@@ -102,12 +102,12 @@ db.open(function (err, db) {
 
                 //  留言列表
                 router.get('/chatList', function (req, res, next) {
-                    if (req.query && req.query.id && req.query.chat) {
+                    if (req.query && req.query.userId && req.query.content) {
                         //getchuancan
                         //新增
-                        var tmp1 = {chat: req.query.chat,userId:req.query.id ,name:req.query.name,parentId:"7"};
+                        var tmp1 = {chat: req.query.content,userId:req.query.userId ,name:req.query.userName,parentId:"7"};
                         collection.insert(tmp1, {safe: true}, function (err, result) {
-                            //console.log(result);
+                            console.log(result);
                         });
                     }
                         //console.log(1);

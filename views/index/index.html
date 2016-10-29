@@ -75,12 +75,9 @@
                 </a>
 
             </div>
-            <div class="list-group col-xs-2 col-sm-2 col-md-2" id="userList">
+            <div class="list-group col-xs-2 col-sm-2 col-md-2" id="EV-userList">
                 <a href="#" class="list-group-item">
                    当前在线
-                </a>
-                <a href="#" class="list-group-item">
-                    当前在线
                 </a>
                 <!--&lt;!&ndash;//模板方法查询全部用户&ndash;&gt;-->
                 <!--{% for author in authors %}-->
@@ -121,43 +118,42 @@
 <script src="/public/js/socket.io/socket.io.js"></script>
 <script>
 
-
+    var iosocket = io.connect();
 
     $(function(){
-        var id= $("#userInfo h4").data("id").trim();
-        var name = $("#userInfo h4").text().trim();
-        var iosocket = io.connect();
+        var usrId= $("#userInfo h4").data("id").trim();
+        var userName = $("#userInfo h4").text().trim();
         iosocket.on('connect', function () {
            console.log("已连接")
-
             iosocket.on('message', function(message) {
-                $('#incomingChatMessages').append($('<li></li>').text(message.content));
+                $('#EV-chatList ul').append($('<li class="list-group-item"></li>').text(message.userName+":"+message.content));
             });
             iosocket.on('disconnect', function() {
                 $('#incomingChatMessages').append('<li>失去连接</li>');
             });
         });
             //发布信息
-        $('#outgoingChatMessage').keypress(function(event) {
-            if(event.which == 13) {
-                event.preventDefault();
-                var obj = {username:"小黑","content":$('#outgoingChatMessage').val()};
+        $('#userSubmit').click(function(event) {
+//                event.preventDefault();
+                var obj = {username:userName,"content":$('#userInput').val()};
                 iosocket.send(obj);
-                $('#outgoingChatMessage').val('');
-            }
+                console.log(obj);
         });
+        //告诉服务器端有用户登录
+        iosocket.emit('login', {userId:usrId, userName:userName});
+
         //监听新用户登录
         iosocket.on('login', function(obj){
-            //判断是否自己
-//            CHAT.updateSysMsg(o, 'login');
-            //告诉服务器端有用户登录
-            iosocket.emit('login', {userid:this.userid, username:this.username});
+            console.log(obj);
+          console.log(obj.userName+"登录了")
+            $('#EV-userList').append($('<li class="list-group-item"></li>').text(obj.userName));
         });
 
 
         //监听用户退出
         iosocket.on('logout', function(o){
-            CHAT.updateSysMsg(o, 'logout');
+            console.log(o);
+            console.log("用户退出")
         });
 
       setTimeout(function(){

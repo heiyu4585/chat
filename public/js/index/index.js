@@ -25,13 +25,13 @@ var ChatList = React.createClass({
 var ChatForm = React.createClass({
     handleSubmit:function(e){
         e.preventDefault();
-        var chat = ReactDOM.findDOMNode(this.refs.chat).value.trim();
+        var content = ReactDOM.findDOMNode(this.refs.chat).value.trim();
         //var id = ReactDOM.findDOMNode(this.refs.id).value.trim();
         //var name = ReactDOM.findDOMNode(this.refs.name).value.trim();
-        var id= $("#userInfo h4").data("id").trim();
-        var name = $("#userInfo h4").text().trim();
-        if(chat.trim()){
-            this.props.onChatSubmit({chat:chat,id:id,name:name});
+        var userId= $("#userInfo h4").data("id").trim();
+        var userName = $("#userInfo h4").text().trim();
+        if(content.trim()){
+            this.props.onChatSubmit({content:content,userId:userId,userName:userName});
             ReactDOM.findDOMNode(this.refs.chat).value = "";
         }
     },
@@ -70,13 +70,13 @@ var ChatBox = React.createClass({
             }.bind(this)
         });
     },
-    handleChatSubmit: function (chat) {
-        console.log(chat)
+    handleChatSubmit: function (obj) {
+        iosocket.send(obj);
         $.ajax({
             url: this.props.url,
             dataType: 'json',
             type: 'get',
-            data: chat,
+            data: obj,
             success: function(data) {
                 this.setState({data: data});
             }.bind(this),
