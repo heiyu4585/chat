@@ -60,23 +60,34 @@
     <div class="panel panel-default">
         <div class="panel-heading">
             <h3 class="panel-title">聊天室</h3>
+            <h4  id="EV-username"></h4>
         </div>
         <div class="panel-body">
-            <div class="list-group col-xs-2 col-sm-2 col-md-2" id="userList">
-                <!--<a href="#" class="list-group-item active">-->
-                    <!--Cras justo odio-->
-                <!--</a>-->
-                <!--<a href="#" class="list-group-item">Dapibus ac facilisis in</a>-->
-                <!--<a href="#" class="list-group-item">Morbi leo risus</a>-->
-                <!--<a href="#" class="list-group-item">Porta ac consectetur ac</a>-->
-                <!--<a href="#" class="list-group-item">Vestibulum at eros</a>-->
-                <!--{% block title %} {{title}} {%endblock%}-->
+            <div class="list-group col-xs-1 col-sm-1 col-md-1" id="userInfo">
+                <a href="#" class="list-group-item">
+                    欢迎:
+                </a>
+                <a href="#" class="list-group-item">
+                    <img src="public/images/244_1.png" alt="tx" class="img-circle">
+                </a>
+                <a href="#" class="list-group-item">
+                    <h4 data-id={{id}}>{{author}}</h4>
+                </a>
 
-                {% for author in authors %}
-                <a class=" list-group-item {% if loop.first %} active{% endif %}"  >{{ author.name }}</a>
-                {% endfor %}
             </div>
-            <div class="col-xs-10 col-sm-10 col-md-10 sayContent" id="EV-chatList">
+            <div class="list-group col-xs-2 col-sm-2 col-md-2" id="userList">
+                <a href="#" class="list-group-item">
+                   当前在线
+                </a>
+                <a href="#" class="list-group-item">
+                    当前在线
+                </a>
+                <!--&lt;!&ndash;//模板方法查询全部用户&ndash;&gt;-->
+                <!--{% for author in authors %}-->
+                <!--<a class=" list-group-item {% if loop.first %} active{% endif %}"  >{{ author.name }}</a>-->
+                <!--{% endfor %}-->
+            </div>
+            <div class="col-xs-9 col-sm-8 col-md-8 sayContent" id="EV-chatList">
                 <!--<h4 class="text-right">当前登陆:{{author}}-->
                     <!--&lt;!&ndash;<small>Subtext for header</small>&ndash;&gt;-->
                 <!--</h4>-->
@@ -99,7 +110,7 @@
         </div>
     </div>
 
-    <div class=" container " id="miao1">
+    <div id="miao1">
     </div>
 </div> <!-- /container -->
 
@@ -109,11 +120,15 @@
 <!--* */-->
 <script src="/public/js/socket.io/socket.io.js"></script>
 <script>
+
+
+
     $(function(){
+        var id= $("#userInfo h4").data("id").trim();
+        var name = $("#userInfo h4").text().trim();
         var iosocket = io.connect();
-            console.log(iosocket);
         iosocket.on('connect', function () {
-            $('#incomingChatMessages').append($('<li>已连接！</li>'));
+           console.log("已连接")
 
             iosocket.on('message', function(message) {
                 $('#incomingChatMessages').append($('<li></li>').text(message.content));
@@ -122,7 +137,7 @@
                 $('#incomingChatMessages').append('<li>失去连接</li>');
             });
         });
-
+            //发布信息
         $('#outgoingChatMessage').keypress(function(event) {
             if(event.which == 13) {
                 event.preventDefault();
@@ -131,12 +146,28 @@
                 $('#outgoingChatMessage').val('');
             }
         });
+        //监听新用户登录
+        iosocket.on('login', function(obj){
+            //判断是否自己
+//            CHAT.updateSysMsg(o, 'login');
+            //告诉服务器端有用户登录
+            iosocket.emit('login', {userid:this.userid, username:this.username});
+        });
+
+
+        //监听用户退出
+        iosocket.on('logout', function(o){
+            CHAT.updateSysMsg(o, 'logout');
+        });
+
+      setTimeout(function(){
+          $("#EV-chatList").scrollTop($("#EV-chatList .list-group").height()+$("#EV-chatList .input-group").height() -$("#EV-chatList").height());
+      },1000)
     });
 </script>
 <input type="text" id="outgoingChatMessage">
 控制台:&nbsp;<ul id="incomingChatMessages"></ul>
-<br />
-<br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br />v
+
 <!--/***-->
 <!--* WebSocket-->
 <!--* *********************-->

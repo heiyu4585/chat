@@ -4,6 +4,8 @@
 
 var express = require('express');
 var router = express.Router();
+var cookieParser = require('cookie-parser');
+var session = require('express-session');
 
 //加载数据库模块
 var mongodb = require('mongodb');
@@ -23,12 +25,17 @@ db.open(function (err, db) {
                     if (req.query && req.query.name && req.query.password) {
                         collection.find({name: req.query.name}).toArray(function (err, docs) {
                             if (docs[0] && docs[0].password && (docs[0].password == req.query.password)) {
-                                res.redirect('/index?name=' + req.query.name);
+                                session.user={
+                                    name: req.query.name,
+                                    id:docs[0]._id
+                                };
+                                res.redirect('/index');
                             } else {
                                 res.render('./index/login', {
                                     title: '登录页',
                                     err: '用户名或密码错误',
                                     userName: req.query.name
+
                                 });
                             }
                         });
@@ -42,16 +49,20 @@ db.open(function (err, db) {
                 //注册
                 router.get('/register', function (req, res, next) {
                     //用户名和密码 时,查询数据库
-                    if (req.query.name && req.query.name && req.query.password) {
+                    if (req.query && req.query.name && req.query.password) {
                         collection.find({name: req.query.name}).toArray(function (err, docs) {
                             //如果没有返回值
                             if (!docs[0]) {
                                 // 写入数据
                                 var tmp1 = {name: req.query.name, password: req.query.password};
                                 collection.insert([tmp1], {safe: true}, function (err, result) {
-                                    //console.log(result);
+                                    session.user={
+                                        name: req.query.name,
+                                        id: result.insertedIds[0].toString()
+                                    };
                                 });
-                                res.redirect('/index?name=' + req.query.name);
+
+                                res.redirect('/index');
                             } else {
                                 res.render('./index/register', {
                                     title: '注册页',
@@ -66,21 +77,18 @@ db.open(function (err, db) {
                     }
                 });
 
-                //    // 用户列表
+                // 首页
                 router.get('/', function (req, res, next) {
-                    //console.log(1);
-                    if (!req.query.name) {
+                    if(!session.user) {
                         res.redirect('/index/login');
                     } else {
-                        collection.find().toArray(function (err, docs) {
-                            //console.log(docs);
-                            //res.send('首页');
                             res.render('index', {
                                 title: '首页-聊天室',
-                                authors: docs,
-                                author: req.query.name
+                                //authors: docs,
+                                author: session.user.name,
+                                id: session.user.id
                             });
-                        });
+                        //});
                     }
                 });
             }

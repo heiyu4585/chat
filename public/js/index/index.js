@@ -1,7 +1,7 @@
 var ChatLi = React.createClass({
     render: function () {
         return (
-            <li className="list-group-item">{this.props.name}=>> {this.props.chat}</li>
+            <li className="list-group-item">{this.props.name} : {this.props.chat}</li>
         )
     }
 });
@@ -26,18 +26,20 @@ var ChatForm = React.createClass({
     handleSubmit:function(e){
         e.preventDefault();
         var chat = ReactDOM.findDOMNode(this.refs.chat).value.trim();
-        var id = ReactDOM.findDOMNode(this.refs.id).value.trim();
-        var name = ReactDOM.findDOMNode(this.refs.name).value.trim();
-        this.props.onChatSubmit({chat:chat,id:id,name:name});
-        ReactDOM.findDOMNode(this.refs.chat).value = "";
+        //var id = ReactDOM.findDOMNode(this.refs.id).value.trim();
+        //var name = ReactDOM.findDOMNode(this.refs.name).value.trim();
+        var id= $("#userInfo h4").data("id").trim();
+        var name = $("#userInfo h4").text().trim();
+        if(chat.trim()){
+            this.props.onChatSubmit({chat:chat,id:id,name:name});
+            ReactDOM.findDOMNode(this.refs.chat).value = "";
+        }
     },
     render: function () {
         return (
             <div className="input-group">
                 <form onSubmit={this.handleSubmit}>
                     <input type="text" className="form-control" ref="chat" id="userInput"/>
-                    <input type="hidden" ref="id"  value= {this.props.userId} />
-                    <input type="hidden" ref="name"  value= {this.props.userName} />
                     <span className="input-group-btn">
                         <button className="btn btn-default" type="submit" id="userSubmit">Go!</button>
                     </span>
@@ -86,7 +88,6 @@ var ChatBox = React.createClass({
     render: function () {
         return (
             <div>
-                <h4 className="text-right">当前登陆:</h4>
                 <ChatList data={this.state.data}/>
                 <ChatForm userId ={this.props.userId} userName={this.props.userName} onChatSubmit={this.handleChatSubmit}/>
             </div>
@@ -95,5 +96,5 @@ var ChatBox = React.createClass({
 });
 
 ReactDOM.render(
-    <ChatBox url="/index/chatList" pollInterval={2000}  userId="2"  userName="heiyu"/>, document.getElementById("EV-chatList")
+    <ChatBox url="/index/chatList" pollInterval={2000} />, document.getElementById("EV-chatList")
 );

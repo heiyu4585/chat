@@ -19,19 +19,19 @@ app.get('/', function (req, res) {
 
 /*
  * 根据不同的功能划分模块*/
-app.use('/admin',require('./routers/admin'));
-app.use('api',require('./routers/api'));
-app.use('/index',require('./routers/index'));
+app.use('/admin', require('./routers/admin'));
+app.use('api', require('./routers/api'));
+app.use('/index', require('./routers/index'));
 
 //加载数据库模块
-var  mongodb =  require('mongodb');
+var mongodb = require('mongodb');
 //var server = new mongodb.Server('localhost', 27017, {auto_reconnect: true});
 //var db = new mongodb.Db('mydb', server, {safe: true});
 
-mongodb.connect('mongodb://localhost:27017/mydb',function(err){
-    if(err){
+mongodb.connect('mongodb://localhost:27017/mydb', function (err) {
+    if (err) {
         console.log('数据库连接失败!');
-    }else{
+    } else {
         console.log('数据库连接成功');
     }
 });
@@ -118,21 +118,21 @@ var swig = require('swig');
 //定义当前应用所使用的模板引擎
 //第一个参数,模板引擎的名称,同时也是模板文件的后缀,
 // 第二个参数标示用户解析处理模板内容的方法
-app.engine('html',swig.renderFile);
+app.engine('html', swig.renderFile);
 ////设置模板文件存放的目录,第一个参数必须是views,第二个参数是目录
-app.set('views','./views');
+app.set('views', './views');
 ////注册所使用的模板引擎,第一个参数必须是 view engine,第二个参数和app.engine
 ////定义的模板引擎(第一个参数)是一致的
-app.set('view engine','html');
+app.set('view engine', 'html');
 ////在开发过程中,需要取消换模板缓存
-swig.setDefaults({cache:false});
+swig.setDefaults({cache: false});
 
 //http://blog.csdn.net/dszgf5717/article/details/50697686
 //
 
 /**
  * mongodb执行方法
- * 
+ *
  * 当前问题:
  * 1.login 页面  账号密码不正确时,一直在读取
  * 2.如何,让表单提交之前验证账号和密码
@@ -141,9 +141,22 @@ swig.setDefaults({cache:false});
  * 5.不通过js如何保存错误后的用户名   // 模板变量
  * 6.后台如何给前端弹窗提示,提示注册成功
  * 7.react.render 没有父元素怎么办
- * 8.post 如何传参
+ * 8.post 如何传参  登陆时,不通过url传参  //session
  * */
 
+
+/**
+ * session
+ * */
+var cookieParser = require('cookie-parser');
+var session = require('express-session');
+
+app.use(cookieParser('sessiontest'));
+app.use(session({
+    secret: 'sessiontest',//与cookieParser中的一致
+    resave: true,
+    saveUninitialized:true
+}));
 
 /***
  * WebSocket
@@ -152,23 +165,63 @@ swig.setDefaults({cache:false});
 var http = require('http').Server(app);
 var io = require('socket.io')(http);
 
-app.get('/', function(req, res){
+app.get('/', function (req, res) {
     res.send('<h1>Welcome Realtime Server</h1>');
 });
 
-http.listen(8081, function(){
-    console.log('listening on *:3000');
+http.listen(8081, function () {
+    console.log('listening on *:8081');
 });
 
+//在线用户
+var onlineUsers = {};
+//当前在线人数
+var onlineCount = 0;
 
-io.on('connection', function(socket){
-    console.log('a user connected');
-    //监听用户发布聊天内容
-    socket.on('message', function(obj){
-        //向所有客户端广播发布的消息
-        io.emit('message', obj);
-        console.log(obj.username+'说：'+obj.content);
+io.on('connection', function (socket) {
+
+
+    //监听新用户加入
+    socket.on('login', function (obj) {
+        //将新加入用户的唯一标识当作socket的名称，后面退出的时候会用到
+        socket.name = obj.userid;
+
+        //检查在线列表，如果不在里面就加入
+        if (!onlineUsers.hasOwnProperty(obj.userid)) {
+            onlineUsers[obj.userid] = obj.username;
+            //在线人数+1
+            onlineCount++;
+        }
+
+        //向所有客户端广播用户加入
+        io.emit('login', {onlineUsers: onlineUsers, onlineCount: onlineCount, user: obj});
+        console.log(obj.username + '加入了聊天室');
     });
+    //监听用户退出
+    socket.on('disconnect', function () {
+        //将退出的用户从在线列表中删除
+        if (onlineUsers.hasOwnProperty(socket.name)) {
+            //退出用户的信息
+            var obj = {userid: socket.name, username: onlineUsers[socket.name]};
+
+            //删除
+            delete onlineUsers[socket.name];
+            //在线人数-1
+            onlineCount--;
+
+            //向所有客户端广播用户退出
+            io.emit('logout', {onlineUsers: onlineUsers, onlineCount: onlineCount, user: obj});
+            console.log(obj.username + '退出了聊天室');
+        }
+        //监听用户发布聊天内容
+        socket.on('message', function (obj) {
+            //向所有客户端广播发布的消息
+            io.emit('message', obj);
+            console.log(obj.username + '说：' + obj.content);
+        });
+
+    });
+
 
 });
 /***
