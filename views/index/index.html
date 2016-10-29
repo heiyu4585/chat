@@ -111,12 +111,12 @@
 <script>
     $(function(){
         var iosocket = io.connect();
-
+            console.log(iosocket);
         iosocket.on('connect', function () {
             $('#incomingChatMessages').append($('<li>已连接！</li>'));
 
-            iosocket.on('news', function(message) {
-                $('#incomingChatMessages').append($('<li></li>').text(message.hello));
+            iosocket.on('message', function(message) {
+                $('#incomingChatMessages').append($('<li></li>').text(message.content));
             });
             iosocket.on('disconnect', function() {
                 $('#incomingChatMessages').append('<li>失去连接</li>');
@@ -126,8 +126,8 @@
         $('#outgoingChatMessage').keypress(function(event) {
             if(event.which == 13) {
                 event.preventDefault();
-                iosocket.send($('#outgoingChatMessage').val());
-                $('#incomingChatMessages').append($('<li></li>').text($('#outgoingChatMessage').val()));
+                var obj = {username:"小黑","content":$('#outgoingChatMessage').val()};
+                iosocket.send(obj);
                 $('#outgoingChatMessage').val('');
             }
         });

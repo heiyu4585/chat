@@ -149,21 +149,28 @@ swig.setDefaults({cache:false});
  * WebSocket
  * *********************
  * */
-var http=require("http");
-var sio=require("socket.io");
+var http = require('http').Server(app);
+var io = require('socket.io')(http);
 
-var server=http.createServer(app);
-var fs=require("fs");
-
-server.listen(8081);
-var socket=sio.listen(server);
-socket.on("connection", function (socket) {
-    socket.emit("news",{hello:"你好"});
-    socket.on("otherEvent", function (data) {
-        console.log("服务器端接受到数据:%j",data);
-    })
+app.get('/', function(req, res){
+    res.send('<h1>Welcome Realtime Server</h1>');
 });
 
+http.listen(8081, function(){
+    console.log('listening on *:3000');
+});
+
+
+io.on('connection', function(socket){
+    console.log('a user connected');
+    //监听用户发布聊天内容
+    socket.on('message', function(obj){
+        //向所有客户端广播发布的消息
+        io.emit('message', obj);
+        console.log(obj.username+'说：'+obj.content);
+    });
+
+});
 /***
  * WebSocket
  * *********************
