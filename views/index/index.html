@@ -73,7 +73,9 @@
                 <a href="#" class="list-group-item">
                     <h4 data-id={{id}}>{{author}}</h4>
                 </a>
-
+                <a href="javascript:;" class="list-group-item">
+                  退出
+                </a>
             </div>
             <div class="list-group col-xs-2 col-sm-2 col-md-2" id="EV-userList">
                 <a href="#" class="list-group-item">
@@ -126,7 +128,9 @@
         iosocket.on('connect', function () {
            console.log("已连接")
             iosocket.on('message', function(message) {
-                $('#EV-chatList ul').append($('<li class="list-group-item"></li>').text(message.userName+":"+message.content));
+                if(message.userId != usrId){
+                    $('#EV-chatList ul').append($('<li class="list-group-item"></li>').text(message.userName+":"+message.content));
+                }
             });
             iosocket.on('disconnect', function() {
                 $('#incomingChatMessages').append('<li>失去连接</li>');
@@ -144,16 +148,23 @@
 
         //监听新用户登录
         iosocket.on('login', function(obj){
-            console.log(obj);
-          console.log(obj.userName+"登录了")
-            $('#EV-userList').append($('<li class="list-group-item"></li>').text(obj.userName));
+          console.log(obj.userName+"登录了");
+            var str='<li class="list-group-item">当前在线</li>';
+            for(var x in obj.onlineUsers ){
+                str += '<li class="list-group-item" data-id="'+x+'">'+obj.onlineUsers[x]+'</li>';
+            }
+            $('#EV-userList').html(str);
         });
 
 
         //监听用户退出
-        iosocket.on('logout', function(o){
-            console.log(o);
-            console.log("用户退出")
+        iosocket.on('logout', function(obj){
+            console.log(obj.userName+"用户退出");
+            var str='<li class="list-group-item">当前在线</li>';
+            for(var x in obj.onlineUsers ){
+                str += '<li class="list-group-item" data-id="'+x+'">'+obj.onlineUsers[x]+'</li>';
+            }
+            $('#EV-userList').html(str);
         });
 
       setTimeout(function(){

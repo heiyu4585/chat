@@ -168,14 +168,14 @@ io.on('connection', function (socket) {
 
     //监听新用户加入
     socket.on('login', function (obj) {
-        console.log(obj.userName + '加入了聊天室');
-        console.log(obj);
+        //console.log(obj.userName + '加入了聊天室');
+        //console.log(socket.name);
         //将新加入用户的唯一标识当作socket的名称，后面退出的时候会用到
-        socket.name = obj.userid;
-
+        socket.name = obj.userId;
+        //console.log(socket.name);
         //检查在线列表，如果不在里面就加入
-        if (!onlineUsers.hasOwnProperty(obj.userid)) {
-            onlineUsers[obj.userid] = obj.userName;
+        if (!onlineUsers.hasOwnProperty(obj.userId)) {
+            onlineUsers[obj.userId] = obj.userName;
             //在线人数+1
             onlineCount++;
         }
@@ -185,11 +185,13 @@ io.on('connection', function (socket) {
     });
     //监听用户退出
     socket.on('disconnect', function () {
+        //console.log("用户退出")
+        //console.log(socket.name);
         //将退出的用户从在线列表中删除
         if (onlineUsers.hasOwnProperty(socket.name)) {
             //退出用户的信息
-            var obj = {userid: socket.name, username: onlineUsers[socket.name]};
-
+            var obj = {userId: socket.name, userName: onlineUsers[socket.name]};
+            //console.log(obj);
             //删除
             delete onlineUsers[socket.name];
             //在线人数-1
@@ -197,7 +199,7 @@ io.on('connection', function (socket) {
 
             //向所有客户端广播用户退出
             io.emit('logout', {onlineUsers: onlineUsers, onlineCount: onlineCount, userName: obj.userName,userId:obj.userId});
-            console.log(obj.userName + '退出了聊天室');
+            //console.log(obj.userName + '退出了聊天室');
         }
     });
     //监听用户发布聊天内容
@@ -205,7 +207,7 @@ io.on('connection', function (socket) {
         //console.log(obj);
         //向所有客户端广播发布的消息
         io.emit('message', obj);
-        console.log(obj.userName + '说：' + obj.content);
+        //console.log(obj.userName + '说：' + obj.content);
     });
 
 });
@@ -213,7 +215,7 @@ io.on('connection', function (socket) {
  * WebSocket
  * *********************
  * */
-
+//mongod -dbpath "E:/www/chat/db"
 /**
  * mongodb执行方法
  *
@@ -227,4 +229,15 @@ io.on('connection', function (socket) {
  * 7.react.render 没有父元素怎么办
  * 8.post 如何传参  登陆时,不通过url传参  //session
  *9. socket 数据保存到 mongodb
+ * 10.禁止二次登陆 session
  * */
+
+
+/**
+ * 技术:nodejs  mongodb session express  socket swig react
+ * 1.用户的登陆.注册
+
+ * 3.swig 模板引擎
+ * 4.react 聊天区域首页
+ * 5.websocket 聊天实时推送,实时在线人数
+* */
