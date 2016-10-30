@@ -143,9 +143,7 @@
                 iosocket.send(obj);
                 console.log(obj);
         });
-        $("#EV-logOut").click(function(){
-           location.href="/index/login"
-        });
+
         //告诉服务器端有用户登录
         iosocket.emit('login', {userId:usrId, userName:userName});
 
@@ -164,6 +162,11 @@
             }
         });
 
+        //退出
+        $("#EV-logOut").click(function(){
+            iosocket.disconnect();
+            location.href="/index/logOut";
+        });
 
         //监听用户退出
         iosocket.on('logout', function(obj){
@@ -174,6 +177,8 @@
             }
             $('#EV-userList').html(str);
         });
+
+
 
       setTimeout(function(){
           $("#EV-chatList").scrollTop($("#EV-chatList .list-group").height()+$("#EV-chatList .input-group").height() -$("#EV-chatList").height());

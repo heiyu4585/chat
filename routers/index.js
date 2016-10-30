@@ -25,24 +25,16 @@ db.open(function (err, db) {
                     if (req.query && req.query.name && req.query.password) {
                         collection.find({name: req.query.name}).toArray(function (err, docs) {
                             if (docs[0] && docs[0].password && (docs[0].password == req.query.password)) {
-                                if (session.user == req.query.name ){
-                                    res.render('./index/login', {
-                                        title: '登录页',
-                                        err: '您已登录',
-                                        userName: req.query.name
-                                    });
-                                }else{
-                                    session.user={
-                                        name: req.query.name,
-                                        id:docs[0]._id,
-                                        isLogin:true
-                                    };
-                                    res.redirect('/index');
-                                }
+                                session.user = {
+                                    name: req.query.name,
+                                    id: docs[0]._id,
+                                    isLogin: true
+                                };
+                                res.redirect('/index');
                             } else {
                                 res.render('./index/login', {
                                     title: '登录页',
-                                    err: '用户名或密码错误',
+                                    err: '警告:用户名或密码错误',
                                     userName: req.query.name
                                 });
                             }
@@ -64,10 +56,9 @@ db.open(function (err, db) {
                                 // 写入数据
                                 var tmp1 = {name: req.query.name, password: req.query.password};
                                 collection.insert([tmp1], {safe: true}, function (err, result) {
-                                    session.user={
+                                    session.user = {
                                         name: req.query.name,
-                                        id: result.insertedIds[0].toString(),
-                                        isLogin:true
+                                        id: result.insertedIds[0].toString()
                                     };
                                 });
 
@@ -75,7 +66,7 @@ db.open(function (err, db) {
                             } else {
                                 res.render('./index/register', {
                                     title: '注册页',
-                                    err: '有相同的用户名'
+                                    err: '警告:有相同的用户名'
                                 });
                             }
                         });
@@ -86,18 +77,28 @@ db.open(function (err, db) {
                     }
                 });
 
+                //退出
+                router.get('/logOut', function (req, res, next) {
+                    //用户名和密码 时,查询数据库
+                    session.user = {};
+                    res.render('./index/login', {
+                        title: '登录页',
+                        err: '提示:您已退出',
+                        userName: req.query.name
+                    });
+                });
                 // 首页
                 router.get('/', function (req, res, next) {
-                    console.log(session.user)
-                    if(!session.user || !session.user.isLogin) {
+                    console.log(session.user);
+                    if (!session.user || !session.user.isLogin) {
                         res.redirect('/index/login');
                     } else {
-                            res.render('index', {
-                                title: '首页-聊天室',
-                                //authors: docs,
-                                author: session.user.name,
-                                id: session.user.id.toString()
-                            });
+                        res.render('index', {
+                            title: '首页-聊天室',
+                            //authors: docs,
+                            author: session.user.name,
+                            id: session.user.id.toString()
+                        });
                         //});
                     }
                 });
@@ -115,16 +116,21 @@ db.open(function (err, db) {
                     if (req.query && req.query.userId && req.query.content) {
                         //getchuancan
                         //新增
-                        var tmp1 = {chat: req.query.content,userId:req.query.userId ,name:req.query.userName,parentId:"7"};
+                        var tmp1 = {
+                            chat: req.query.content,
+                            userId: req.query.userId,
+                            name: req.query.userName,
+                            parentId: "7"
+                        };
                         collection.insert(tmp1, {safe: true}, function (err, result) {
                             console.log(result);
                         });
                     }
-                        //console.log(1);
-                        collection.find().toArray(function (err, docs) {
-                            res.send(docs);
-                            res.end();
-                        });
+                    //console.log(1);
+                    collection.find().toArray(function (err, docs) {
+                        res.send(docs);
+                        res.end();
+                    });
 
                 });
             }
