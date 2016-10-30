@@ -14,7 +14,7 @@ app.use('/public', express.static(__dirname + '/public'));
 
 //与下面冲突,如果想要 /admin显示内容怎么办
 app.get('/', function (req, res) {
-    res.send('index');
+    res.send('<h1>Welcome </h1><a href="/index/login">点击登陆</a>');
 });
 
 /*
@@ -150,10 +150,6 @@ app.use(session({
 var http = require('http').Server(app);
 var io = require('socket.io')(http);
 
-app.get('/', function (req, res) {
-    res.send('<h1>Welcome Realtime Server</h1>');
-});
-
 http.listen(8081, function () {
     console.log('listening on *:8081');
 });
@@ -178,13 +174,18 @@ io.on('connection', function (socket) {
             onlineUsers[obj.userId] = obj.userName;
             //在线人数+1
             onlineCount++;
+            //向所有客户端广播用户加入
+            io.emit('login', {onlineUsers: onlineUsers, onlineCount: onlineCount, userName: obj.userName,userId:obj.userId});
+        }else{
+            console.log("重复登陆")
+            socket.emit('login',{isLogin:true})
         }
 
-        //向所有客户端广播用户加入
-        io.emit('login', {onlineUsers: onlineUsers, onlineCount: onlineCount, userName: obj.userName,userId:obj.userId});
+
     });
     //监听用户退出
     socket.on('disconnect', function () {
+        //console.log(session);
         //console.log("用户退出")
         //console.log(socket.name);
         //将退出的用户从在线列表中删除

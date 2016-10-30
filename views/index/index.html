@@ -73,7 +73,7 @@
                 <a href="#" class="list-group-item">
                     <h4 data-id={{id}}>{{author}}</h4>
                 </a>
-                <a href="javascript:;" class="list-group-item">
+                <a href="javascript:;" class="list-group-item" id="EV-logOut">
                   退出
                 </a>
             </div>
@@ -143,17 +143,25 @@
                 iosocket.send(obj);
                 console.log(obj);
         });
+        $("#EV-logOut").click(function(){
+           location.href="/index/login"
+        });
         //告诉服务器端有用户登录
         iosocket.emit('login', {userId:usrId, userName:userName});
 
         //监听新用户登录
         iosocket.on('login', function(obj){
-          console.log(obj.userName+"登录了");
-            var str='<li class="list-group-item">当前在线</li>';
-            for(var x in obj.onlineUsers ){
-                str += '<li class="list-group-item" data-id="'+x+'">'+obj.onlineUsers[x]+'</li>';
+            if(obj.isLogin){
+                alert("您已经登录");
+                location.href="/index/login"
+            }else{
+                console.log(obj.userName+"登录了");
+                var str='<li class="list-group-item">当前在线</li>';
+                for(var x in obj.onlineUsers ){
+                    str += '<li class="list-group-item" data-id="'+x+'">'+obj.onlineUsers[x]+'</li>';
+                }
+                $('#EV-userList').html(str);
             }
-            $('#EV-userList').html(str);
         });
 
 
