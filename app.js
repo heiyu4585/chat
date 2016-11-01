@@ -230,14 +230,14 @@ io.on('connection', function (socket) {
  * 7.react.render 没有父元素怎么办
  * 8.post 如何传参  登陆时,不通过url传参  //session
  *9. socket 数据保存到 mongodb
- * 10.禁止二次登陆 session
+
  * */
 
 
 /**
- * 技术:nodejs  mongodb session express  socket swig react
+ * 技术:nodejs  mongodb session express  socket swig react bootstrap
  * 1.用户的登陆.注册
-
+ * 2.禁止二次登陆
  * 3.swig 模板引擎
  * 4.react 聊天区域首页
  * 5.websocket 聊天实时推送,实时在线人数
