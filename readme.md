@@ -7,16 +7,20 @@
 
 一.开启mongodb:
 
-    1.运行cmd.exe进入dos命令界面，执行下列命令
+1.运行cmd.exe进入dos命令界面，执行下列命令
+
     `> cd d:mongodb>bin`
     `> d:mongodb bin>mongod -dbpath "E:/www/chat/db"`
     
-    2.在robomongo中选择链接数据库
+2.在robomongo中选择链接数据库
+
     新建方法 create  localhost:27017
 
 二. 运行
 
 `node app.js`
+
+进入 :http://localhost:8081/ 查看
 
 三 .技术栈
 
