@@ -6,13 +6,13 @@
 *开启方法:
 
 一.开启mongodb:
-
-1.运行cmd.exe进入dos命令界面，执行下列命令
+1.安装mongodb
+2.运行cmd.exe进入dos命令界面，执行下列命令
 
     `> cd d:mongodb>bin`
     `> d:mongodb bin>mongod -dbpath "E:/www/chat/db"`
     
-2.在robomongo中选择链接数据库
+3.在robomongo中选择链接数据库
 
     新建方法 create  localhost:27017
 
